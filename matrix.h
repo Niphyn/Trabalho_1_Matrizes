@@ -5,10 +5,16 @@
 
 typedef struct Matrix 
 {
-    
+    List *linhas;
+    int qtd_linhas;
+    List *colunas;
+    int qtd_colunas;
 } Matrix;
 
-//Não mudado da lista aindaList *list_construct(Node *head, Type_list type);
-//Não mudado da lista aindaList void list_delete(List *l);
+Matriz *matriz_construct();
+
+void matriz_destroy(Matriz *matriz);
+//Não mudado da lista ainda List *list_construct(Node *head, Type_list type);
+//Não mudado da lista ainda List void list_delete(List *l);
 
 #endif
