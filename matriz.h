@@ -21,8 +21,10 @@ void matriz_node_mudar_valor(int l, int c, Matriz *matriz, float valor);
 
 void matriz_inserir_celula(Matriz *m, Node *celula);
 
-Node *matriz_node_existe(int l, int c, Matriz *matriz);
+Node *matriz_node_get(int l, int c, Matriz *matriz);
 
 void matriz_densa_print(Matriz *m);
+
+//Matriz *matriz_soma(Matriz *a, Matriz *b);
 
 #endif

@@ -41,7 +41,7 @@ void matriz_read(Matriz *m){
 
 void matriz_node_mudar_valor(int l, int c, Matriz *matriz, float valor){
 
-    Node *celula = matriz_node_existe(l,c,matriz);
+    Node *celula = matriz_node_get(l,c,matriz);
 
     if(celula != NULL){
         celula->value = valor;
@@ -93,7 +93,7 @@ void matriz_inserir_celula(Matriz *m, Node *celula){
     }
 }//implementada
 
-Node *matriz_node_existe(int l, int c, Matriz *matriz){
+Node *matriz_node_get(int l, int c, Matriz *matriz){
 
     Node *current = matriz->linhas[l],*retorno = NULL;
 
@@ -125,3 +125,37 @@ void matriz_densa_print(Matriz *m){
         printf("\n");
     }
 }//implementada
+
+Matriz *matriz_soma(Matriz *a, Matriz *b){
+    Matriz *soma = NULL;
+    if((a->qtd_linhas != b->qtd_linhas)||(a->qtd_colunas != b->qtd_colunas)){
+        printf("Impossivel somar duas matrizes de tamanhos diferentes!\nRetornando um ponteiro NULL!!
+        \nMatriz A Linha: %d Coluna: %d\nMatriz B Linha: %d Coluna: %d",a->qtd_linhas,a->qtd_colunas,b->qtd_linhas,b->qtd_colunas);
+    }else{
+        int linha = 0,coluna_a = 0,coluna_b = 0;
+        float valor_soma = 0;
+        soma = matriz_construct(a->qtd_linhas,a->qtd_colunas);
+        Node *celula_a, *celula_b;
+        for(linha = 0;linha< a->qtd_linhas;linha++){
+            celula_a = a->linhas[linha];
+            celula_b = b->linhas[linha];
+            while((celula_a != NULL)||(celula_b != NULL)){
+                co >= 0 ? numero++ : numero--;
+                if(celula_a->c > celula_b->c){
+                    matriz_node_mudar_valor(celula_b->l,celula_b->c,soma,celula_b->value);
+                    celula_b = celula_b->next_l;
+                }else if(celula_a->c > celula_b->c){
+                    matriz_node_mudar_valor(celula_a->l,celula_a->c,soma,celula_a->value);
+                    celula_a = celula_a->next_l;
+                }else{
+                    valor_soma = 0;
+                    valor_soma = celula_a->value + celula_b->value;
+                    matriz_node_mudar_valor(celula_a->l,celula_a->c,soma,valor_soma);
+                    celula_a = celula_a->next_l;//tratar o caso de celula_a ou b ser NULL e der segmenataultion fault ao tentar acessar o número de colunas
+                    celula_b = celula_b->next_l;//tratar do caso de troca de linha
+                }
+            }
+        }
+    }
+    return soma;
+}
