@@ -25,6 +25,12 @@ Node *matriz_node_get(int l, int c, Matriz *matriz);
 
 void matriz_densa_print(Matriz *m);
 
-//Matriz *matriz_soma(Matriz *a, Matriz *b);
+void matriz_apaga_celula(Matriz *m, Node *celula);
+
+Matriz *matriz_soma(Matriz *a, Matriz *b);
+
+void matriz_esparsa_print(Matriz *a);
+
+Matriz *matriz_multiplicar_escalar(Matriz *a, float num);
 
 #endif
