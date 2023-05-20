@@ -5,17 +5,18 @@
 
 int main(){
     int linha, coluna;
-    float num;
     scanf("%d %d",&linha, &coluna);
-    Matriz *a = matriz_construct(linha,coluna),*b;
+    Matriz *a = matriz_construct(linha,coluna),*b = matriz_construct(linha,coluna),*c;
     matriz_read(a);
-    printf("Multiplicar a matriz pelo número: ");
-    scanf("%f",&num);
+    matriz_read(b);
+    c = matriz_multiplicacao_ponto_a_ponto(a,b);
+    printf("\nMatriz A\n");
     matriz_densa_print(a);
-    matriz_esparsa_print(a);
-    b = matriz_multiplicar_escalar(a,num);
+    printf("\nMatriz B\n");
     matriz_densa_print(b);
-    matriz_esparsa_print(b);
+    printf("\nMatriz C\n");
+    matriz_densa_print(c);
     matriz_destroy(a);
     matriz_destroy(b);
+    matriz_destroy(c);
 }

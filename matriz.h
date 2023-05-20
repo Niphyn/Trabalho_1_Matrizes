@@ -33,4 +33,6 @@ void matriz_esparsa_print(Matriz *a);
 
 Matriz *matriz_multiplicar_escalar(Matriz *a, float num);
 
+Matriz *matriz_multiplicacao_ponto_a_ponto(Matriz *a, Matriz *b);
+
 #endif

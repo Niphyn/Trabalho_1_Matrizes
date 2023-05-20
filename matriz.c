@@ -222,3 +222,29 @@ Matriz *matriz_multiplicar_escalar(Matriz *a, float num){
     }
     return b;
 }
+
+Matriz *matriz_multiplicacao_ponto_a_ponto(Matriz *a, Matriz *b){
+    Matriz *c = matriz_construct(a->qtd_linhas,a->qtd_colunas);
+    if((a->qtd_linhas != b->qtd_linhas)||(a->qtd_colunas != b->qtd_colunas)){
+        printf("Impossivel multiplicar ponto a ponto duas matrizes de tamanhos diferentes!\nMatriz A: %dX%d\nMatriz B: %dX%d",
+		a->qtd_linhas,a->qtd_colunas,b->qtd_linhas,b->qtd_colunas);
+    }else{
+        Node *celula_a, *celula_b;
+        for(int i = 0; i < a->qtd_linhas; i++){
+        celula_a = a->linhas[i];
+        celula_b = b->linhas[i];
+        while((celula_b != NULL)&&(celula_a != NULL)){
+            if(celula_b->c == celula_a->c){
+                matriz_node_mudar_valor(i,celula_a->c,c,(celula_a->value)*(celula_b->value));
+                celula_a = celula_a->next_l;
+                celula_b = celula_b->next_l;
+            }else if(celula_b->c > celula_a->c){
+                celula_a = celula_a->next_l;
+            }else{
+                celula_b = celula_b->next_l;
+            }
+        }
+    }
+    }
+    return c;
+}
