@@ -35,4 +35,10 @@ Matriz *matriz_multiplicar_escalar(Matriz *a, float num);
 
 Matriz *matriz_multiplicacao_ponto_a_ponto(Matriz *a, Matriz *b);
 
+Matriz *matriz_troca_linhas(int l1, int l2, Matriz *a);
+
+Matriz *matriz_troca_colunas(int c1, int c2, Matriz *a);
+
+Matriz *matriz_multiplicacao(Matriz *a, Matriz *b);
+
 #endif

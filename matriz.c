@@ -57,30 +57,14 @@ void matriz_node_mudar_valor(int l, int c, Matriz *matriz, float valor){
 
 void matriz_apaga_celula(Matriz *m, Node *celula){
 
-    Node *prev, *current;
-    int i = 0;
-    //Acertar linhas
+    Node *prev;
 
-    prev = NULL;
-    current = m->linhas[celula->l];
-    i = current->c;
-    while(i != celula->c){ 
-        prev = current;
-        current = current->next_l;
-        i = current->c;
-    }
+    //Acertar linhas
+    prev = node_prev_linha(m->linhas[celula->l],celula);
     prev->next_l = celula->next_l;
     
-    //Acertar colunas
-    i = 0;
-    
-    prev = NULL;
-    current = m->colunas[celula->c];
-    while(i != celula->l){
-        prev = current;
-        current = current->next_c;
-        i = current->c;
-    }
+    //Acertar colunas   
+    prev = node_prev_coluna( m->colunas[celula->c],celula);
     prev->next_c = celula->next_c;
     node_destroy(celula);
 }//implementada
@@ -208,7 +192,7 @@ void matriz_esparsa_print(Matriz *a){
     if(qtd_celulas == 0){
         printf("Matriz nula!\n");
     }
-}
+}//implementada
 
 Matriz *matriz_multiplicar_escalar(Matriz *a, float num){
     Node *current;
@@ -221,7 +205,7 @@ Matriz *matriz_multiplicar_escalar(Matriz *a, float num){
         }
     }
     return b;
-}
+}//implementada
 
 Matriz *matriz_multiplicacao_ponto_a_ponto(Matriz *a, Matriz *b){
     Matriz *c = matriz_construct(a->qtd_linhas,a->qtd_colunas);
@@ -247,4 +231,106 @@ Matriz *matriz_multiplicacao_ponto_a_ponto(Matriz *a, Matriz *b){
     }
     }
     return c;
-}
+}//implementada
+
+Matriz *matriz_troca_linhas(int l1, int l2, Matriz *a){
+  if((l1 < a->qtd_linhas)&&(l2 < a->qtd_linhas)){
+    Node *current;
+    Matriz *b = matriz_construct(a->qtd_linhas,a->qtd_colunas);
+    for(int i = 0; i < a->qtd_linhas; i++){
+        if(i == l1){
+            current = a->linhas[l2];
+            while(current != NULL){
+                matriz_node_mudar_valor(l1,current->c,b,current->value);
+                current = current->next_l;
+            }
+        }else if(i == l2){
+            current = a->linhas[l1];
+            while(current != NULL){
+                matriz_node_mudar_valor(l2,current->c,b,current->value);
+                current = current->next_l;
+            }
+        }else{
+            current = a->linhas[i];
+            while(current != NULL){
+                matriz_node_mudar_valor(i,current->c,b,current->value);
+                current = current->next_l;
+            }
+        }
+    }
+    return b;
+  }else{
+    printf("Matriz não tem linhas suficientes\n");
+    return NULL;
+  }
+}//implementada
+
+Matriz *matriz_troca_colunas(int c1, int c2, Matriz *a){
+    if((c1 < a->qtd_colunas)&&(c2 < a->qtd_colunas)){
+    Node *current;
+    Matriz *b = matriz_construct(a->qtd_linhas,a->qtd_colunas);
+    for(int i = 0; i < a->qtd_colunas; i++){
+        if(i == c1){
+            current = a->colunas[c2];
+            while(current != NULL){
+                matriz_node_mudar_valor(current->l,c1,b,current->value);
+                current = current->next_c;
+            }
+        }else if(i == c2){
+            current = a->colunas[c1];
+            while(current != NULL){
+                matriz_node_mudar_valor(current->l,c2,b,current->value);
+                current = current->next_c;
+            }
+        }else{
+            current = a->colunas[i];
+            while(current != NULL){
+                matriz_node_mudar_valor(current->l,i,b,current->value);
+                current = current->next_c;
+            }
+        }
+    }
+    return b;
+   }else{
+    printf("Matriz não tem colunas suficientes\n");
+    return NULL;
+  }
+}//implementada
+
+Matriz *matriz_multiplicacao(Matriz *a, Matriz *b){
+    if(a->qtd_colunas == b->qtd_linhas){
+        Node *celula_a, *celula_b;
+        float soma = 0;
+        int i = 0, j = 0;
+        Matriz *c = matriz_construct(a->qtd_linhas,b->qtd_colunas); 
+        while(i < a->qtd_linhas){
+            soma = 0;
+            celula_a = a->linhas[i];
+            celula_b = b->colunas[j];
+            while((celula_a != NULL)&&(celula_b != NULL)){
+                if(celula_a->c == celula_b->l){
+                    soma = soma + ((celula_a->value)*(celula_b->value));
+                    celula_a = celula_a->next_l;
+                    celula_b = celula_b->next_c;
+                    printf("Soma: %.2f\n",soma);
+                }else if(celula_a->c < celula_b->l){
+                    celula_a = celula_a->next_l;
+                }else{
+                    celula_b = celula_b->next_c;
+                }
+            }
+            if(soma != 0){
+                matriz_node_mudar_valor(i,j,c,soma);
+            }
+            j++;
+            if(j == b->qtd_colunas){
+                i++;
+                j = 0;
+            }
+        }
+        return c;
+    }else{
+        printf("Impossível multiplicar a Matriz A pela Matriz B\n");
+        return NULL;
+    }
+}//implementada
