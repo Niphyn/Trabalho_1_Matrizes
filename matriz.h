@@ -41,4 +41,14 @@ Matriz *matriz_troca_colunas(int c1, int c2, Matriz *a);
 
 Matriz *matriz_multiplicacao(Matriz *a, Matriz *b);
 
+Matriz *matriz_slice(Matriz *a, int l_inicio, int c_inicio, int l_fim, int c_fim);
+
+Matriz *matriz_transposta(Matriz *a);
+
+Matriz *matriz_covulacao(Matriz *a, Matriz *kernel);
+
+void matriz_salvar_binario(Matriz *a);
+
+Matriz *matriz_ler_binario();
+
 #endif

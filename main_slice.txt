@@ -1,0 +1,18 @@
+#include "matriz.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+
+int main(){
+    int linha, coluna;
+    scanf("%d %d",&linha, &coluna);
+    Matriz *a = matriz_construct(linha,coluna),*transposta;
+    matriz_read(a);
+    transposta = matriz_transposta(a);
+    printf("Matriz A\n");
+    matriz_densa_print(a);
+    printf("Matriz Transposta\n");
+    matriz_densa_print(transposta);
+    matriz_destroy(a);
+    matriz_destroy(transposta);
+}

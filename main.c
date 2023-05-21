@@ -8,12 +8,14 @@ int main(){
     scanf("%d %d",&linha, &coluna);
     Matriz *a = matriz_construct(linha,coluna),*b = matriz_construct(linha,coluna);
     Matriz *soma, *escalar, *ponto_a_ponto;
-    Matriz *troca_linha, *troca_coluna,*multiplicacao;
+    Matriz *troca_linha, *troca_coluna,*multiplicacao,*slice,*transposta;
     matriz_read(a);
     matriz_read(b);
     printf("Acabou de ler\n");
     ponto_a_ponto = matriz_multiplicacao_ponto_a_ponto(a,b);
     soma = matriz_soma(a,b);
+    slice = matriz_slice(a,1,1,2,2);
+    transposta = matriz_transposta(a);
     escalar = matriz_multiplicar_escalar(a,2);
     printf("Escalar\n");
     troca_linha = matriz_troca_linhas(2,0,a);
@@ -36,6 +38,10 @@ int main(){
     matriz_densa_print(troca_coluna);
     printf("\nMatriz de multiplicação de duas matrizes\n");
     matriz_densa_print(multiplicacao);
+    printf("Matriz Slice\n");
+    matriz_densa_print(slice);
+    printf("Matriz Transposta\n");
+    matriz_densa_print(transposta);
     matriz_destroy(a);
     matriz_destroy(b);
     matriz_destroy(ponto_a_ponto);
@@ -44,4 +50,6 @@ int main(){
     matriz_destroy(troca_coluna);
     matriz_destroy(troca_linha);
     matriz_destroy(multiplicacao);
+    matriz_destroy(slice);
+    matriz_destroy(transposta);
 }

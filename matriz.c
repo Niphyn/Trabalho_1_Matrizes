@@ -334,3 +334,47 @@ Matriz *matriz_multiplicacao(Matriz *a, Matriz *b){
         return NULL;
     }
 }//implementada
+
+Matriz *matriz_slice(Matriz *a, int l_inicio, int c_inicio, int l_fim, int c_fim){
+    if(((l_fim-l_inicio+1) > 0)&&((c_fim-c_inicio + 1)>0)){
+        Matriz *b = matriz_construct(l_fim-l_inicio+1,c_fim-c_inicio+1);
+        Node *current;
+        int i = l_inicio,j = c_inicio;
+        while((current != NULL)||(i<=l_fim)){
+            current = a->linhas[i];
+            j = current->c;
+            while((j<=c_fim)&&(current != NULL)){
+                matriz_node_mudar_valor(i-l_inicio,j-c_inicio,b,current->value);
+                current = current->next_l;
+                if(current != NULL){
+                    j = current->c;
+                }
+            }
+            i++;
+        }
+        return b;
+    }else{
+        printf("Slice vazio ou negativo, impossível de localizar\n");
+        return NULL;
+    }
+}//implementada
+
+Matriz *matriz_transposta(Matriz *a){
+    Matriz *b = matriz_construct(a->qtd_colunas,a->qtd_linhas);
+    int i = 0;
+    Node *current;
+    while((current != NULL)||(i < a->qtd_colunas)){
+        current = a->colunas[i];
+        while(current != NULL){
+            matriz_node_mudar_valor(current->c,current->l,b,current->value);
+            current = current->next_c;
+        }
+        i++;
+    }
+    return b;
+}//implementada
+
+Matriz *matriz_covulacao(Matriz *a, Matriz *kernel){
+    Matriz *b = matriz_construct(a->qtd_linhas,a->qtd_colunas);
+    return b;
+}
