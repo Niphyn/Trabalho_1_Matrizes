@@ -53,4 +53,6 @@ void matriz_escrever_binario(FILE *f, Matriz *a);
 
 Matriz *matriz_ler_binario(FILE *f);
 
+void matriz_anular(Matriz *a);
+
 #endif

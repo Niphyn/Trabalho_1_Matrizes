@@ -61,11 +61,19 @@ void matriz_apaga_celula(Matriz *m, Node *celula){
 
     //Acertar linhas
     prev = node_prev_linha(m->linhas[celula->l],celula);
-    prev->next_l = celula->next_l;
+    if(prev == NULL){
+        m->linhas[celula->l] = celula->next_l;
+    }else{
+        prev->next_l = celula->next_l;
+    }
     
     //Acertar colunas   
     prev = node_prev_coluna( m->colunas[celula->c],celula);
-    prev->next_c = celula->next_c;
+    if(prev == NULL){
+         m->colunas[celula->c] = celula->next_c;
+    }else{
+        prev->next_c = celula->next_c;
+    }
     node_destroy(celula);
 }//implementada
 
@@ -417,7 +425,90 @@ Matriz *matriz_ler_binario(FILE *f){
     }
 }//implementada
 
+void matriz_anular(Matriz *a){
+    int i = 0,l,c;
+    Node *current,*next;
+    while((i < a->qtd_linhas)||(current != NULL)){
+        current = a->linhas[i];
+        while(current != NULL){
+            l = current->l;
+            c = current->c;
+            next = current->next_l;
+            matriz_node_mudar_valor(l,c,a,0);
+            current = next;
+        }
+        i++;
+    }
+}
+
+float matriz_somar_elementos(Matriz *a){
+    int i = 0;
+    float soma = 0;
+    Node *current;
+    while((i < a->qtd_linhas)||(current != NULL)){
+        current = a->linhas[i];
+        while(current != NULL){
+            soma = soma + current->value;
+            current = current->next_l;
+        }
+        i++;
+    }
+    return soma;
+}
+
 Matriz *matriz_covulacao(Matriz *a, Matriz *kernel){
-    Matriz *b = matriz_construct(a->qtd_linhas,a->qtd_colunas);
-    return b;
+    Matriz *b = matriz_construct(a->qtd_linhas,a->qtd_colunas),
+    *submatriz = matriz_construct(kernel->qtd_linhas,kernel->qtd_colunas),*ponto_a_ponto;
+    int i = 0, j = 0,l_inicio,c_inicio,c_fim,i_sub,j_sub;
+    float soma = 0;
+    Node *current_sub;
+    if((kernel->qtd_linhas == kernel->qtd_colunas)&&(kernel->qtd_colunas%2 == 1)){
+        while(i < a->qtd_linhas){
+            for(j = 0; j < a->qtd_colunas; j++){
+                printf("Elemento linha: %d coluna: %d\n",i,j);
+                l_inicio = i - (kernel->qtd_linhas/2);
+                c_inicio = j - (kernel->qtd_colunas/2);
+                c_fim = j + (kernel->qtd_colunas/2);
+                i_sub = 0;
+                j_sub = 0;
+                while(i_sub < submatriz->qtd_linhas){
+                    printf("Submatriz linha: %d\n",i_sub);
+                    if((i_sub + l_inicio >= 0)&&(i_sub + l_inicio < a->qtd_linhas)){
+                        printf("%d\n",i_sub+l_inicio);
+                        current_sub = a->linhas[i_sub + l_inicio];
+                        j_sub = current_sub->c;
+                        while((j_sub<=c_fim)&&(current_sub != NULL)){
+                            if(j_sub >= c_inicio){
+                                matriz_node_mudar_valor(i_sub,j_sub-c_inicio,submatriz,current_sub->value);
+                            }
+                            current_sub = current_sub->next_l;
+                            if(current_sub != NULL){
+                                j_sub = current_sub->c;
+                            }
+                        }
+                    }
+                    i_sub++;
+                }
+                printf("saiu\n");
+                ponto_a_ponto = matriz_multiplicacao_ponto_a_ponto(submatriz,kernel);
+                soma = matriz_somar_elementos(ponto_a_ponto);
+                if(soma != 0){
+                    matriz_node_mudar_valor(i,j,b,soma);
+                }
+                matriz_densa_print(submatriz);
+                printf("\n");
+                matriz_anular(submatriz);
+                matriz_destroy(ponto_a_ponto);
+                matriz_densa_print(b);
+                printf("\n");
+            }
+            i++;
+        }
+        matriz_destroy(submatriz);
+        return b;
+    }else{
+        printf("Kernel tem que ser uma matriz quadrada de número impar para conseguir calcular elemento central\n");
+        matriz_destroy(submatriz);
+        return NULL;
+    }
 }
