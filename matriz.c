@@ -374,6 +374,49 @@ Matriz *matriz_transposta(Matriz *a){
     return b;
 }//implementada
 
+void matriz_escrever_binario(FILE *f, Matriz *a){
+    if(f != NULL){
+        fwrite(&(a->qtd_linhas),1,sizeof(int),f);
+        fwrite(&(a->qtd_colunas),1,sizeof(int),f);
+        Node *current = NULL;
+        int i = 0;
+        while((current != NULL)||(i < a->qtd_linhas)){
+            current = a->linhas[i];
+            while(current != NULL){
+                fwrite(&(current->l),1,sizeof(int),f);
+                fwrite(&(current->c),1,sizeof(int),f);
+                fwrite(&(current->value),1,sizeof(float),f);
+                current = current->next_l;
+            }
+            i++;
+        }
+    }else{
+        printf("Arquivo vazio!\n");
+    }
+}//implementada
+
+Matriz *matriz_ler_binario(FILE *f){
+    if(f != NULL){
+        int l,c,retorno = 1;
+        float valor;
+        fread(&l, 1, sizeof(int), f);
+        fread(&c, 1, sizeof(int), f);
+        Matriz *a = matriz_construct(l,c);
+        while(retorno){
+            retorno = fread(&l, 1, sizeof(int), f);
+            fread(&c, 1, sizeof(int), f);
+            fread(&valor,1,sizeof(float),f);
+            if(retorno != 0){
+                matriz_node_mudar_valor(l,c,a,valor);
+            }
+        }
+        return a;
+    }else{
+        printf("Arquivo vazio!\n");
+        return NULL;
+    }
+}//implementada
+
 Matriz *matriz_covulacao(Matriz *a, Matriz *kernel){
     Matriz *b = matriz_construct(a->qtd_linhas,a->qtd_colunas);
     return b;

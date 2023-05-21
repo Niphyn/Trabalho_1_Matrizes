@@ -2,6 +2,8 @@
 #define _LIST_
 
 #include "node.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct Matriz 
 {
@@ -47,8 +49,8 @@ Matriz *matriz_transposta(Matriz *a);
 
 Matriz *matriz_covulacao(Matriz *a, Matriz *kernel);
 
-void matriz_salvar_binario(Matriz *a);
+void matriz_escrever_binario(FILE *f, Matriz *a);
 
-Matriz *matriz_ler_binario();
+Matriz *matriz_ler_binario(FILE *f);
 
 #endif
