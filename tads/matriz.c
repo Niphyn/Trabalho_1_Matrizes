@@ -343,7 +343,6 @@ Matriz *matriz_multiplicacao(Matriz *a, Matriz *b){
                     soma = soma + ((celula_a->value)*(celula_b->value));
                     celula_a = celula_a->next_l;
                     celula_b = celula_b->next_c;
-                    printf("Soma: %.2f\n",soma);
                 }else if(celula_a->c < celula_b->l){
                     celula_a = celula_a->next_l;
                 }else{
@@ -370,13 +369,16 @@ Matriz *matriz_multiplicacao(Matriz *a, Matriz *b){
  mais n iterações no de dentro, o que acarretaria em n*m interações no loop mais interno*/
 
 Matriz *matriz_slice(Matriz *a, int l_inicio, int c_inicio, int l_fim, int c_fim){
+
     if(((l_fim-l_inicio+1) > 0)&&((c_fim-c_inicio + 1)>0)){
         Matriz *b = matriz_construct(l_fim-l_inicio+1,c_fim-c_inicio+1);
         Node *current;
         int i = l_inicio,j = c_inicio;
-        while((current != NULL)||(i<=l_fim)){
+        while(i<=l_fim){
             current = a->linhas[i];
-            j = current->c;
+            if(current != NULL){
+                j = current->c;
+            }
             while((j<=c_fim)&&(current != NULL)){
                 matriz_node_mudar_valor(i-l_inicio,j-c_inicio,b,current->value);
                 current = current->next_l;
@@ -412,10 +414,28 @@ Matriz *matriz_transposta(Matriz *a){
 /*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
 loop de fora acarretaria em mais n iterações no de dentro*/
 
+int Matriz_size(Matriz *m){
+    int qtd = 0,i = 0;
+    Node *current = NULL;
+    while((current != NULL)||(i<m->qtd_linhas)){
+        current = m->linhas[i];
+        while(current != NULL){
+            if(current != NULL){
+                qtd++;
+            }
+            current = current->next_l;
+        }
+        i++;
+    }
+    return qtd;
+}
+
 void matriz_escrever_binario(FILE *f, Matriz *a){
     if(f != NULL){
+        int qtd = Matriz_size(a);
         fwrite(&(a->qtd_linhas),1,sizeof(int),f);
         fwrite(&(a->qtd_colunas),1,sizeof(int),f);
+        fwrite(&qtd,1,sizeof(int),f);
         Node *current = NULL;
         int i = 0;
         while((current != NULL)||(i < a->qtd_linhas)){
@@ -437,12 +457,13 @@ loop de fora acarretaria em mais n iterações no de dentro*/
 
 Matriz *matriz_ler_binario(FILE *f){
     if(f != NULL){
-        int l,c,retorno = 1;
+        int l,c,retorno = 1,qtd;
         float valor;
         fread(&l, 1, sizeof(int), f);
         fread(&c, 1, sizeof(int), f);
+        fread(&qtd,1,sizeof(int),f);
         Matriz *a = matriz_construct(l,c);
-        while(retorno){
+        for(int i = 0; i<qtd;i++){
             retorno = fread(&l, 1, sizeof(int), f);
             fread(&c, 1, sizeof(int), f);
             fread(&valor,1,sizeof(float),f);
@@ -503,16 +524,13 @@ Matriz *matriz_covulacao(Matriz *a, Matriz *kernel){
     if((kernel->qtd_linhas == kernel->qtd_colunas)&&(kernel->qtd_colunas%2 == 1)){
         while(i < a->qtd_linhas){
             for(j = 0; j < a->qtd_colunas; j++){
-                printf("Elemento linha: %d coluna: %d\n",i,j);
                 l_inicio = i - (kernel->qtd_linhas/2);
                 c_inicio = j - (kernel->qtd_colunas/2);
                 c_fim = j + (kernel->qtd_colunas/2);
                 i_sub = 0;
                 j_sub = 0;
                 while(i_sub < submatriz->qtd_linhas){
-                    printf("Submatriz linha: %d\n",i_sub);
                     if((i_sub + l_inicio >= 0)&&(i_sub + l_inicio < a->qtd_linhas)){
-                        printf("%d\n",i_sub+l_inicio);
                         current_sub = a->linhas[i_sub + l_inicio];
                         j_sub = current_sub->c;
                         while((j_sub<=c_fim)&&(current_sub != NULL)){
@@ -527,18 +545,13 @@ Matriz *matriz_covulacao(Matriz *a, Matriz *kernel){
                     }
                     i_sub++;
                 }
-                printf("saiu\n");
                 ponto_a_ponto = matriz_multiplicacao_ponto_a_ponto(submatriz,kernel);
                 soma = matriz_somar_elementos(ponto_a_ponto);
                 if(soma != 0){
                     matriz_node_mudar_valor(i,j,b,soma);
                 }
-                matriz_densa_print(submatriz);
-                printf("\n");
                 matriz_anular(submatriz);
                 matriz_destroy(ponto_a_ponto);
-                matriz_densa_print(b);
-                printf("\n");
             }
             i++;
         }
