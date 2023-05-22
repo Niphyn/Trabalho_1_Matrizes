@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//OBS: quando me refiro a N nas notações com O estou me referindo ao número de elementos não nulos na matriz
+
 Matriz *matriz_construct(int l, int c){
     Matriz *m = (Matriz *)calloc(1,sizeof(Matriz));
     m->qtd_linhas = l;
@@ -10,7 +12,7 @@ Matriz *matriz_construct(int l, int c){
     m->linhas = (Node**)calloc(l,sizeof(Node*));
     m->colunas = (Node**)calloc(c,sizeof(Node*));
     return m;
-}//implementada
+}//Complexidade do tempo: O(1), pois tem um tempo de execução constante porque não ha loop na função
 
 void matriz_destroy(Matriz *matriz){
     Node *current, *next = NULL;
@@ -26,7 +28,7 @@ void matriz_destroy(Matriz *matriz){
     free(matriz->linhas);
     free(matriz->colunas);
     free(matriz);
-}//implementada porcamente
+}//Complexidade do tempo: O(1), pois tem um tempo de execução constante porque não ha loop na função
 
 void matriz_read(Matriz *m){
     float v;
@@ -36,7 +38,9 @@ void matriz_read(Matriz *m){
             matriz_node_mudar_valor(i,j,m,v);
         }
     }
-}//implementada
+}
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 void matriz_node_mudar_valor(int l, int c, Matriz *matriz, float valor){
 
@@ -53,7 +57,8 @@ void matriz_node_mudar_valor(int l, int c, Matriz *matriz, float valor){
             matriz_inserir_celula(matriz,celula);
         }
     }
-}//implementada
+}
+//Complexidade do tempo: O(1), pois tem um tempo de execução constante porque não ha loop na função
 
 void matriz_apaga_celula(Matriz *m, Node *celula){
 
@@ -75,7 +80,8 @@ void matriz_apaga_celula(Matriz *m, Node *celula){
         prev->next_c = celula->next_c;
     }
     node_destroy(celula);
-}//implementada
+}
+//Complexidade do tempo: O(1), pois tem um tempo de execução constante porque não ha loop na função
 
 void matriz_inserir_celula(Matriz *m, Node *celula){
 
@@ -117,7 +123,8 @@ void matriz_inserir_celula(Matriz *m, Node *celula){
         prev->next_c = celula;
         celula->next_c = current;
     }
-}//implementada
+}
+//Complexidade do tempo: O(1), pois tem um tempo de execução constante porque não ha loop na função
 
 Node *matriz_node_get(int l, int c, Matriz *matriz){
 
@@ -130,7 +137,9 @@ Node *matriz_node_get(int l, int c, Matriz *matriz){
         current = current->next_l;
     }
     return retorno;
-}//implementada
+}
+/*Complexidade do tempo: O(N), pois se trata de uma busca linear, ou seja, 
+quanto mais distante o componente procurado se encontra do head da linha mais demorar*/
 
 void matriz_densa_print(Matriz *m){
     Node *current;
@@ -150,7 +159,9 @@ void matriz_densa_print(Matriz *m){
         }
         printf("\n");
     }
-}//implementada
+}
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 Matriz *matriz_soma(Matriz *a, Matriz *b){
     Matriz *soma = matriz_construct(a->qtd_linhas,a->qtd_colunas);
@@ -184,7 +195,9 @@ Matriz *matriz_soma(Matriz *a, Matriz *b){
         }
     }
     return soma;
-}//implementada, muito grande 
+}
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 void matriz_esparsa_print(Matriz *a){
     Node *current;
@@ -200,7 +213,9 @@ void matriz_esparsa_print(Matriz *a){
     if(qtd_celulas == 0){
         printf("Matriz nula!\n");
     }
-}//implementada
+}
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 Matriz *matriz_multiplicar_escalar(Matriz *a, float num){
     Node *current;
@@ -213,7 +228,9 @@ Matriz *matriz_multiplicar_escalar(Matriz *a, float num){
         }
     }
     return b;
-}//implementada
+}
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 Matriz *matriz_multiplicacao_ponto_a_ponto(Matriz *a, Matriz *b){
     Matriz *c = matriz_construct(a->qtd_linhas,a->qtd_colunas);
@@ -239,7 +256,9 @@ Matriz *matriz_multiplicacao_ponto_a_ponto(Matriz *a, Matriz *b){
     }
     }
     return c;
-}//implementada
+}
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 Matriz *matriz_troca_linhas(int l1, int l2, Matriz *a){
   if((l1 < a->qtd_linhas)&&(l2 < a->qtd_linhas)){
@@ -271,7 +290,9 @@ Matriz *matriz_troca_linhas(int l1, int l2, Matriz *a){
     printf("Matriz não tem linhas suficientes\n");
     return NULL;
   }
-}//implementada
+}
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 Matriz *matriz_troca_colunas(int c1, int c2, Matriz *a){
     if((c1 < a->qtd_colunas)&&(c2 < a->qtd_colunas)){
@@ -303,7 +324,9 @@ Matriz *matriz_troca_colunas(int c1, int c2, Matriz *a){
     printf("Matriz não tem colunas suficientes\n");
     return NULL;
   }
-}//implementada
+}
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 Matriz *matriz_multiplicacao(Matriz *a, Matriz *b){
     if(a->qtd_colunas == b->qtd_linhas){
@@ -341,7 +364,10 @@ Matriz *matriz_multiplicacao(Matriz *a, Matriz *b){
         printf("Impossível multiplicar a Matriz A pela Matriz B\n");
         return NULL;
     }
-}//implementada
+}
+/*Complexidade do tempo: O(N^3) para matrizes quadradas e O(M*N*O) p/ matrizes com dimensões (M x N) e (N x O),
+ pois se trata de três loops encadeados, ou seja, aumento de +1 iteração no loop de fora acarretaria em 
+ mais n iterações no de dentro, o que acarretaria em n*m interações no loop mais interno*/
 
 Matriz *matriz_slice(Matriz *a, int l_inicio, int c_inicio, int l_fim, int c_fim){
     if(((l_fim-l_inicio+1) > 0)&&((c_fim-c_inicio + 1)>0)){
@@ -365,7 +391,9 @@ Matriz *matriz_slice(Matriz *a, int l_inicio, int c_inicio, int l_fim, int c_fim
         printf("Slice vazio ou negativo, impossível de localizar\n");
         return NULL;
     }
-}//implementada
+}
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 Matriz *matriz_transposta(Matriz *a){
     Matriz *b = matriz_construct(a->qtd_colunas,a->qtd_linhas);
@@ -380,7 +408,9 @@ Matriz *matriz_transposta(Matriz *a){
         i++;
     }
     return b;
-}//implementada
+}
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 void matriz_escrever_binario(FILE *f, Matriz *a){
     if(f != NULL){
@@ -401,7 +431,9 @@ void matriz_escrever_binario(FILE *f, Matriz *a){
     }else{
         printf("Arquivo vazio!\n");
     }
-}//implementada
+}
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 Matriz *matriz_ler_binario(FILE *f){
     if(f != NULL){
@@ -423,7 +455,9 @@ Matriz *matriz_ler_binario(FILE *f){
         printf("Arquivo vazio!\n");
         return NULL;
     }
-}//implementada
+}
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 void matriz_anular(Matriz *a){
     int i = 0,l,c;
@@ -440,6 +474,8 @@ void matriz_anular(Matriz *a){
         i++;
     }
 }
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 float matriz_somar_elementos(Matriz *a){
     int i = 0;
@@ -455,6 +491,8 @@ float matriz_somar_elementos(Matriz *a){
     }
     return soma;
 }
+/*Complexidade do tempo: O(N^2), pois se trata de dois loops encadeados, ou seja, aumento de +1 iteração no
+loop de fora acarretaria em mais n iterações no de dentro*/
 
 Matriz *matriz_covulacao(Matriz *a, Matriz *kernel){
     Matriz *b = matriz_construct(a->qtd_linhas,a->qtd_colunas),
@@ -512,3 +550,7 @@ Matriz *matriz_covulacao(Matriz *a, Matriz *kernel){
         return NULL;
     }
 }
+
+/*Complexidade do tempo: O(M*N*O*P) p/ matrizes com dimensões (M x N) e (O x P),
+ pois se trata de quatro loops encadeados, ou seja, aumento de +1 iteração no loop de fora acarretaria em 
+ mais n iterações no de dentro, o que acarretaria em n*m interações no loop mais interno, e assim por diante*/
